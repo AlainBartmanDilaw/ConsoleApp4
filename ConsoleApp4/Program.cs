@@ -106,13 +106,15 @@ namespace SimpleThreadPool
         {
             //int iSleep = random.Next(500, 10000);
             String hash = "";
+            String hash2 = "";
             Stopwatch stopWatch = Stopwatch.StartNew();
             if (!data.GetRow(fichier))
             {
                 Console.WriteLine("{0}: Working on index {1}/{3} (size = {4}) on file {2}", Thread.CurrentThread.Name, index, fichier.FullName, listFiles.Count, fichier.Length);
                 hash = HashCompute.GetChecksum(fichier.FullName);
+                hash2 = HashCompute.GetSHA256(fichier.FullName);
                 stopWatch.Stop();
-                data.InsertRow(fichier, hash);
+                //data.InsertRow(fichier, hash);
                 Console.WriteLine("{0}: Ending on index {1} on file {2} after {3} : {4}", Thread.CurrentThread.Name, index, fichier.Name, stopWatch.Elapsed.TotalSeconds.ToString("0.000000"), hash);
             }
             else
@@ -130,13 +132,14 @@ namespace SimpleThreadPool
 
             //const String K_DIRECTORY = @"c:\Users\Alain\Documents\Recover\Recovered data 03-13 22_13_03\Résultat d'analyse approfondie\Plus de fichiers perdus(RAW)\MKV file";
 
-            LoadDirectory(@"y:\Films");
-            LoadDirectory(@"y:\Films HQ");
-            LoadDirectory(@"z:\Films");
-            LoadDirectory(@"z:\_Dessins Animes");
-            LoadDirectory(@"x:\Séries");
-            LoadDirectory(@"c:\Users\Alain\Videos\Films");
-            LoadDirectory(@"c:\Users\Alain\Videos\Séries");
+            LoadDirectory(@"z:\Images\2015-07-17");
+            //LoadDirectory(@"y:\Films");
+            //LoadDirectory(@"y:\Films HQ");
+            //LoadDirectory(@"z:\Films");
+            //LoadDirectory(@"z:\_Dessins Animes");
+            //LoadDirectory(@"x:\Séries");
+            //LoadDirectory(@"c:\Users\Alain\Videos\Films");
+            //LoadDirectory(@"c:\Users\Alain\Videos\Séries");
 
             using (var pool = new Pool(2))
             {

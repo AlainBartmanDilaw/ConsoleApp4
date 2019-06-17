@@ -52,7 +52,6 @@ namespace CompareBySizeAndSHA246
                 totalBytesRead += bytesRead;
 
                 do
-
                 {
                     oldBytesRead = bytesRead;
                     oldBuffer = buffer;
