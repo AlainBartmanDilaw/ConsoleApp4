@@ -1,5 +1,5 @@
 ﻿using CompareBySizeAndSHA246;
-using ConsoleApp4;
+using SimpleThreadPool;
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;

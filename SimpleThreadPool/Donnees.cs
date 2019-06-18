@@ -3,7 +3,7 @@ using System.Data.SQLite;
 using System.IO;
 
 
-namespace ConsoleApp4
+namespace SimpleThreadPool
 {
     class Donnees
     {
