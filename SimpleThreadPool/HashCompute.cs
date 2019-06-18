@@ -45,6 +45,7 @@ namespace CompareBySizeAndSHA246
 
             using (FileStream stream = File.OpenRead(file))
             using (SHA256Managed hashAlgorithm = new SHA256Managed())
+            using (SHA1Managed hashAlgorithmSHA1 = new SHA1Managed())
             {
                 size = stream.Length;
                 buffer = new byte[4096];
@@ -61,16 +62,24 @@ namespace CompareBySizeAndSHA246
                     if (bytesRead == 0)
                     {
                         hashAlgorithm.TransformFinalBlock(oldBuffer, 0, oldBytesRead);
+                        hashAlgorithmSHA1.TransformFinalBlock(oldBuffer, 0, oldBytesRead);
                     }
                     else
                     {
                         hashAlgorithm.TransformBlock(oldBuffer, 0, oldBytesRead, oldBuffer, 0);
+                        hashAlgorithmSHA1.TransformBlock(oldBuffer, 0, oldBytesRead, oldBuffer, 0);
                     }
 
                     //BackgroundWorker.ReportProgress((int)​((double)totalBytesRead * 100 / size));
                 } while (bytesRead != 0);
 
-                return BitConverter.ToString(hashAlgorithm.Hash).Replace("-", String.Empty);
+                String sha256 = BitConverter.ToString(hashAlgorithm.Hash).Replace("-", String.Empty);
+                String sha1 = BitConverter.ToString(hashAlgorithmSHA1.Hash).Replace("-", String.Empty);
+                Console.WriteLine("{0}", file);
+                Console.WriteLine("SHA256 : {0}", sha256);
+                Console.WriteLine("SHA1   : {0}", sha1);
+
+                return sha256;
             }
         }
 
