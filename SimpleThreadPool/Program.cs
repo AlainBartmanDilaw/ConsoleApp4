@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Net.NetworkInformation;
 using System.Threading;
 
 namespace SimpleThreadPool
@@ -101,7 +103,37 @@ namespace SimpleThreadPool
 
     public static class Program
     {
-        static SQLiteConnection cnx = new SQLiteConnection();
+
+        private static string[] suffixes = new[] { " B", " KB", " MB", " GB", " TB", " PB" };
+
+        public static string ToSize(double number, int precision = 2)
+        {
+            // unit's number of bytes
+            const double unit = 1024;
+            // suffix counter
+            int i = 0;
+            // as long as we're bigger than a unit, keep going
+            while (number > unit)
+            {
+                number /= unit;
+                i++;
+            }
+            // apply precision and current suffix
+            return Math.Round(number, precision) + suffixes[i];
+        }
+
+        static readonly string[] SizeSuffixes = { "bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB" };
+        static string SizeSuffix(long value, int decimalPlaces = 0)
+        {
+            if (value < 0)
+            {
+                throw new ArgumentException("Bytes should not be negative", "value");
+            }
+            var mag = (int)Math.Max(0, Math.Log(value, 1024));
+            var adjustedSize = Math.Round(value / Math.Pow(1024, mag), decimalPlaces);
+            return String.Format("{0} {1}", adjustedSize, SizeSuffixes[mag]);
+        }
+
         private static void RunThis(Random random, int index, FileInfo fichier)
         {
             //int iSleep = random.Next(500, 10000);
@@ -110,7 +142,7 @@ namespace SimpleThreadPool
             Stopwatch stopWatch = Stopwatch.StartNew();
             if (!data.GetRow(fichier))
             {
-                Console.WriteLine("{0}: Working on index {1}/{3} (size = {4}) on file {2}", Thread.CurrentThread.Name, index, fichier.FullName, listFiles.Count, fichier.Length);
+                Console.WriteLine("{0}: Working on index {1}/{3} (size = {4}) on file {2}", Thread.CurrentThread.Name, index, fichier.FullName, listFiles.Count, SizeSuffix(fichier.Length,2));
                 hash = HashCompute.GetChecksum(fichier.FullName);
                 hash2 = HashCompute.GetSHA256(fichier.FullName);
                 stopWatch.Stop();
@@ -127,13 +159,15 @@ namespace SimpleThreadPool
         static List<FileInfo> listFiles = new List<FileInfo>();
         static void Main()
         {
+            Console.WriteLine("Traitement sur " + Environment.MachineName);
+
             data = new Donnees();
             data.InitializeDatabase(@"HashFiles.db");
 
             //const String K_DIRECTORY = @"c:\Users\Alain\Documents\Recover\Recovered data 03-13 22_13_03\Résultat d'analyse approfondie\Plus de fichiers perdus(RAW)\MKV file";
 
-            //LoadDirectory(@"d:\Profiles\aleglise\source\repos\SimpleThreadPool\SimpleThreadPool\Properties");
-            LoadDirectory(@"z:\Images\2015-07-17");
+            LoadDirectory(@"d:\Profiles\aleglise\source\repos\SimpleThreadPool\SimpleThreadPool\Properties");
+            //LoadDirectory(@"z:\Images\2015-07-17");
             //LoadDirectory(@"y:\Films");
             //LoadDirectory(@"y:\Films HQ");
             //LoadDirectory(@"z:\Films");
