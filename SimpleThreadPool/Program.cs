@@ -132,8 +132,8 @@ namespace SimpleThreadPool
 
             //const String K_DIRECTORY = @"c:\Users\Alain\Documents\Recover\Recovered data 03-13 22_13_03\Résultat d'analyse approfondie\Plus de fichiers perdus(RAW)\MKV file";
 
-            LoadDirectory(@"d:\Profiles\aleglise\source\repos\SimpleThreadPool\SimpleThreadPool\Properties");
-            //LoadDirectory(@"z:\Images\2015-07-17");
+            //LoadDirectory(@"d:\Profiles\aleglise\source\repos\SimpleThreadPool\SimpleThreadPool\Properties");
+            LoadDirectory(@"z:\Images\2015-07-17");
             //LoadDirectory(@"y:\Films");
             //LoadDirectory(@"y:\Films HQ");
             //LoadDirectory(@"z:\Films");
